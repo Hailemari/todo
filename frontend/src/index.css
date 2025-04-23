@@ -1,0 +1,163 @@
+/* Global styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f0f2f5;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+  min-height: 100vh;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 0 24px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-content {
+  padding: 24px;
+}
+
+/* Card styling */
+.stat-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.filter-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.todo-list-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.todo-card {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 400px !important; /* Fixed height for all cards */
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.todo-card .ant-card-body {
+  flex: 1;
+  height: 220px !important; /* Fixed height for card body */
+  overflow: hidden;
+}
+
+.todo-card .ant-card-cover {
+  height: 180px;
+}
+
+.todo-card .thumbnail-container,
+.todo-card .thumbnail-placeholder {
+  height: 180px;
+  overflow: hidden;
+}
+
+.todo-card .thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.todo-card:hover .thumbnail {
+  transform: scale(1.05);
+}
+
+/* Make sure all attachment sections have the same height */
+.attachment-section, .no-attachment {
+  height: 36px;
+  margin-top: 12px;
+}
+
+/* Make sure all tag sections have the same height */
+.tag-list {
+  min-height: 32px;
+  margin-top: 12px;
+}
+
+/* Modal styling */
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.45) !important; /* Semi-transparent overlay */
+}
+
+/* Form styling */
+.todo-form-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.form-title {
+  margin-bottom: 0 !important;
+}
+
+.form-input, .form-textarea {
+  border-radius: 6px;
+}
+
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.todo-tag {
+  margin-right: 0;
+}
+
+.add-tag-button {
+  cursor: pointer;
+  border-style: dashed;
+}
+
+.upload-section {
+  margin-bottom: 16px;
+}
+
+.upload-button {
+  display: flex;
+  align-items: center;
+}
+
+.submit-button {
+  height: 40px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+/* Search input styling */
+.ant-input-group-addon {
+  background-color: transparent;
+  border-left: none;
+}
+
+.ant-input-search .ant-input:hover + .ant-input-group-addon .ant-input-search-button:not(.ant-btn-primary) {
+  border-left-color: #d9d9d9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 16px;
+  }
+  
+  .filter-card {
+    padding: 12px;
+  }
+}
