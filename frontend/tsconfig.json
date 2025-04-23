@@ -3,19 +3,5 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ],
-
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist", 
-    "strict": false,
-    "noImplicitAny": false,
-    "noEmitOnError": false,
-    "typeRoots": ["./node_modules/@types"]
-  }
+  ]
 }
