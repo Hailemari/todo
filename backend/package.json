@@ -4,7 +4,7 @@
   "description": "Backend for Todo application",
   "main": "index.ts",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node index.ts",
     "dev": "nodemon --exec ts-node index.ts",
     "build": "tsc"
   },
