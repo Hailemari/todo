@@ -16,7 +16,15 @@ interface TodoFormProps {
     imagePath?: string;
     filePath?: string;
   };
-  onFinish: (values: FormData) => void;
+  onFinish: (values: Partial<{ 
+    _id?: string; 
+    title?: string; 
+    description?: string; 
+    completed?: boolean; 
+    tags?: string[]; 
+    imagePath?: string; 
+    filePath?: string; 
+  }> | FormData) => void;
   loading: boolean;
 }
 
@@ -47,7 +55,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ initialValues, onFinish, loading })
 
   const validateFormData = (values: FormValues): { valid: boolean; message?: string } => {
     if (!values.title || values.title.trim() === '' || values.title === 'undefined') {
-      return { valid: false, message: 'Title cannot be empty or "undefined"' };
+      return { valid: false, message: 'Title cannot be empty' };
     }
     return { valid: true };
   };

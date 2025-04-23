@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Input, Button, message, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
@@ -12,13 +12,18 @@ const Login = () => {
 
   useEffect(() => {
     // Check if user is already logged in
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
     if (user) {
       navigate('/dashboard');
     }
   }, [navigate]);
 
-  const onFinish = async (values) => {
+  interface LoginValues {
+    email: string;
+    password: string;
+  }
+
+  const onFinish = async (values: LoginValues): Promise<void> => {
     try {
       setLoading(true);
       const data = await login(values);
@@ -27,7 +32,19 @@ const Login = () => {
       message.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to login');
+      interface ApiError extends Error {
+        response?: {
+          data?: {
+            message?: string;
+          };
+        };
+      }
+
+      if (error instanceof Error && (error as ApiError).response?.data?.message) {
+        message.error((error as ApiError).response?.data?.message || 'An error occurred');
+      } else {
+        message.error('Failed to Login');
+      }
     } finally {
       setLoading(false);
     }

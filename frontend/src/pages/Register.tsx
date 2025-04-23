@@ -12,13 +12,20 @@ const Register = () => {
 
   useEffect(() => {
     // Check if user is already logged in
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
     if (user) {
       navigate('/dashboard');
     }
   }, [navigate]);
 
-  const onFinish = async (values) => {
+  interface RegisterFormValues {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }
+
+  const onFinish = async (values: RegisterFormValues) => {
     try {
       setLoading(true);
       const data = await register(values);
@@ -27,7 +34,19 @@ const Register = () => {
       message.success('Registration successful!');
       navigate('/dashboard');
     } catch (error) {
-      message.error(error.response?.data?.message || 'Failed to register');
+      interface ApiError extends Error {
+        response?: {
+          data?: {
+            message?: string;
+          };
+        };
+      }
+
+      if (error instanceof Error && (error as ApiError).response?.data?.message) {
+        message.error((error as ApiError).response?.data?.message || 'An error occurred');
+      } else {
+        message.error('Failed to register');
+      }
     } finally {
       setLoading(false);
     }

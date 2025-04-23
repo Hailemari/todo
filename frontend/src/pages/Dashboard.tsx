@@ -8,14 +8,11 @@ import {
   Select, 
   Space, 
   Typography, 
-  Divider,
   Card,
-  Badge,
   Avatar,
   Statistic,
   Row,
   Col,
-  Menu,
   Dropdown
 } from 'antd';
 import { 
@@ -135,10 +132,21 @@ const Dashboard: React.FC = () => {
         searchTerm, 
         selectedTag
       );
-      setTodos(response.todos);
+      setTodos(response.todos.map((todo: Partial<ITodo>) => ({
+              _id: todo._id || '',
+              title: todo.title || '',
+              description: todo.description || '',
+              completed: todo.completed || false,
+              tags: todo.tags || [],
+              imagePath: todo.imagePath || '',
+              filePath: todo.filePath || '',
+              user: todo.user || '',
+              createdAt: new Date(todo.createdAt || Date.now()),
+              updatedAt: new Date(todo.updatedAt || Date.now())
+            })) as ITodo[]);
       setPagination(response.pagination);
     } catch (error) {
-      message.error('Failed to fetch todos');
+      message.error(`Failed to fetch todos ${error}`);
     } finally {
       setLoading(false);
     }
@@ -147,12 +155,15 @@ const Dashboard: React.FC = () => {
   const handleCreateTodo = async (values: Partial<ITodo>): Promise<void> => {
     try {
       setLoading(true);
-      await createTodo(values);
+      if (!values.title) {
+        throw new Error('Title is required');
+      }
+      await createTodo({ ...values, title: values.title });
       message.success('Todo created successfully');
       setIsModalVisible(false);
       fetchTodos();
     } catch (error) {
-      message.error('Failed to create todo');
+      message.error(`Failed to fetch todos ${error}`);
     } finally {
       setLoading(false);
     }
@@ -163,13 +174,16 @@ const Dashboard: React.FC = () => {
       if (!selectedTodo) return;
       
       setLoading(true);
-      await updateTodo(selectedTodo._id, values);
+      if (!values.title) {
+        throw new Error('Title is required');
+      }
+      await updateTodo(selectedTodo._id, { ...values, title: values.title });
       message.success('Todo updated successfully');
       setIsModalVisible(false);
       setSelectedTodo(null);
       fetchTodos();
     } catch (error) {
-      message.error('Failed to update todo');
+      message.error(`Failed to fetch todos ${error}`);
     } finally {
       setLoading(false);
     }
@@ -182,7 +196,7 @@ const Dashboard: React.FC = () => {
       message.success('Todo deleted successfully');
       fetchTodos();
     } catch (error) {
-      message.error('Failed to delete todo');
+      message.error(`Failed to fetch todos ${error}`);
     } finally {
       setLoading(false);
     }
@@ -369,7 +383,10 @@ const Dashboard: React.FC = () => {
         
         <Card className="todo-list-card" bordered={false}>
           <TodoList
-            todos={todos}
+            todos={todos.map(todo => ({
+              ...todo,
+              createdAt: todo.createdAt.toISOString()
+            }))}
             onEdit={showEditModal}
             onDelete={handleDeleteTodo}
             loading={loading}
@@ -395,7 +412,7 @@ const Dashboard: React.FC = () => {
           maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
         >
           <TodoForm
-            initialValues={selectedTodo}
+            initialValues={selectedTodo || undefined}
             onFinish={selectedTodo ? handleUpdateTodo : handleCreateTodo}
             loading={loading}
           />

@@ -4,14 +4,15 @@ import {
   DeleteOutlined, 
   FileOutlined,
   EyeOutlined,
-  ClockCircleOutlined,
-  CheckCircleOutlined,
-  PaperClipOutlined,
-  TagOutlined
+  PaperClipOutlined
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 
 const { Text, Paragraph, Title } = Typography;
+
+// Base URL extracted as a constant for easier management
+const BASE_URL = 'http://localhost:5000';
+const UPLOADS_PATH = `${BASE_URL}/uploads/`;
 
 const TodoList = ({
   todos,
@@ -21,8 +22,26 @@ const TodoList = ({
   pagination,
   onPageChange
 }: {
-  todos: any[];
-  onEdit: (todo: any) => void;
+  todos: { 
+    _id: string; 
+    title: string; 
+    description?: string; 
+    imagePath?: string; 
+    filePath?: string; 
+    tags?: string[]; 
+    completed: boolean; 
+    createdAt: string; 
+  }[];
+  onEdit: (todo: { 
+    _id: string; 
+    title: string; 
+    description?: string; 
+    imagePath?: string; 
+    filePath?: string; 
+    tags?: string[]; 
+    completed: boolean; 
+    createdAt: string; 
+  }) => void;
   onDelete: (id: string) => void;
   loading: boolean;
   pagination: { currentPage: number; totalCount: number; itemsPerPage: number; totalPages: number };
@@ -36,7 +55,7 @@ const TodoList = ({
   const handleImagePreview = (imagePath: string) => {
     setImagePreview({
       visible: true,
-      url: `http://localhost:5000/uploads/${imagePath}`
+      url: `${UPLOADS_PATH}${imagePath}`
     });
   };
 
@@ -80,7 +99,7 @@ const TodoList = ({
         borderTopRightRadius: '8px',
       }}>
         <img 
-          src={`http://localhost:5000/uploads/${imagePath}`} 
+          src={`${UPLOADS_PATH}${imagePath}`} 
           alt={title} 
           className="thumbnail" 
           style={{ 
@@ -105,9 +124,6 @@ const TodoList = ({
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            '&:hover': {
-              opacity: 1
-            }
           }}
           onClick={() => handleImagePreview(imagePath)}
         >
@@ -141,7 +157,7 @@ const TodoList = ({
             
             // Create a temporary anchor element to force download
             const tempLink = document.createElement('a');
-            tempLink.href = `http://localhost:5000/uploads/${filePath}`;
+            tempLink.href = `${UPLOADS_PATH}${filePath}`;
             tempLink.setAttribute('download', fileName);
             tempLink.setAttribute('target', '_blank');
             document.body.appendChild(tempLink);

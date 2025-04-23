@@ -15,8 +15,8 @@ interface TodoData {
   description?: string;
   completed?: boolean;
   tags?: string[];
-  image?: any;
-  file?: any;
+  image?: File | Blob;
+  file?: File | Blob | undefined;
 }
 
 interface PaginationData {
