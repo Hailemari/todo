@@ -155,15 +155,12 @@ const Dashboard: React.FC = () => {
   const handleCreateTodo = async (values: Partial<ITodo>): Promise<void> => {
     try {
       setLoading(true);
-      if (!values.title) {
-        throw new Error('Title is required');
-      }
-      await createTodo({ ...values, title: values.title });
+      await createTodo(values);
       message.success('Todo created successfully');
       setIsModalVisible(false);
       fetchTodos();
     } catch (error) {
-      message.error(`Failed to fetch todos ${error}`);
+      message.error('Failed to create todo');
     } finally {
       setLoading(false);
     }
@@ -174,16 +171,13 @@ const Dashboard: React.FC = () => {
       if (!selectedTodo) return;
       
       setLoading(true);
-      if (!values.title) {
-        throw new Error('Title is required');
-      }
-      await updateTodo(selectedTodo._id, { ...values, title: values.title });
+      await updateTodo(selectedTodo._id, values);
       message.success('Todo updated successfully');
       setIsModalVisible(false);
       setSelectedTodo(null);
       fetchTodos();
     } catch (error) {
-      message.error(`Failed to fetch todos ${error}`);
+      message.error('Failed to update todo');
     } finally {
       setLoading(false);
     }
@@ -196,7 +190,7 @@ const Dashboard: React.FC = () => {
       message.success('Todo deleted successfully');
       fetchTodos();
     } catch (error) {
-      message.error(`Failed to fetch todos ${error}`);
+      message.error('Failed to delete todo');
     } finally {
       setLoading(false);
     }
@@ -383,10 +377,7 @@ const Dashboard: React.FC = () => {
         
         <Card className="todo-list-card" bordered={false}>
           <TodoList
-            todos={todos.map(todo => ({
-              ...todo,
-              createdAt: todo.createdAt.toISOString()
-            }))}
+            todos={todos}
             onEdit={showEditModal}
             onDelete={handleDeleteTodo}
             loading={loading}
@@ -412,7 +403,7 @@ const Dashboard: React.FC = () => {
           maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
         >
           <TodoForm
-            initialValues={selectedTodo || undefined}
+            initialValues={selectedTodo}
             onFinish={selectedTodo ? handleUpdateTodo : handleCreateTodo}
             loading={loading}
           />
