@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Form, Input, Button, message, Typography } from 'antd';
+import { Form, Input, Button, message, Typography, Card } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../services/api';
@@ -11,7 +11,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
     const user = JSON.parse(localStorage.getItem('user') || 'null');
     if (user) {
       navigate('/dashboard');
@@ -29,17 +28,12 @@ const Register = () => {
     try {
       setLoading(true);
       const data = await register(values);
-      // Save user to local storage
       localStorage.setItem('user', JSON.stringify(data));
       message.success('Registration successful!');
       navigate('/dashboard');
     } catch (error) {
       interface ApiError extends Error {
-        response?: {
-          data?: {
-            message?: string;
-          };
-        };
+        response?: { data?: { message?: string } };
       }
 
       if (error instanceof Error && (error as ApiError).response?.data?.message) {
@@ -53,9 +47,27 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-form">
-        <Title level={2}>Register</Title>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: '#f0f2f5',
+        padding: '2rem',
+      }}
+    >
+      <Card
+        style={{
+          width: '100%',
+          maxWidth: 450,
+          borderRadius: 12,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+        }}
+      >
+        <Title level={2} style={{ textAlign: 'center', marginBottom: 30 }}>
+          Register
+        </Title>
         <Form
           name="register"
           initialValues={{ remember: true }}
@@ -66,29 +78,30 @@ const Register = () => {
             name="name"
             rules={[{ required: true, message: 'Please input your Name!' }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Name" />
+            <Input prefix={<UserOutlined />} placeholder="Name" size="large" />
           </Form.Item>
-          
+
           <Form.Item
             name="email"
             rules={[
               { required: true, message: 'Please input your Email!' },
-              { type: 'email', message: 'Please enter a valid email!' }
+              { type: 'email', message: 'Please enter a valid email!' },
             ]}
           >
-            <Input prefix={<MailOutlined />} placeholder="Email" />
+            <Input prefix={<MailOutlined />} placeholder="Email" size="large" />
           </Form.Item>
-          
+
           <Form.Item
             name="password"
             rules={[
               { required: true, message: 'Please input your Password!' },
-              { min: 6, message: 'Password must be at least 6 characters!' }
+              { min: 6, message: 'Password must be at least 6 characters!' },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined />}
               placeholder="Password"
+              size="large"
             />
           </Form.Item>
 
@@ -110,20 +123,28 @@ const Register = () => {
             <Input.Password
               prefix={<LockOutlined />}
               placeholder="Confirm Password"
+              size="large"
             />
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={loading}
+              size="large"
+              style={{ borderRadius: 6 }}
+            >
               Register
             </Button>
           </Form.Item>
-          
+
           <div style={{ textAlign: 'center' }}>
             Already have an account? <Link to="/login">Login now!</Link>
           </div>
         </Form>
-      </div>
+      </Card>
     </div>
   );
 };

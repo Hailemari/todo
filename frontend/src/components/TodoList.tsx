@@ -217,7 +217,6 @@ const TodoList = ({
     />
   );
 
-  // Custom grid configuration with exactly 5 columns on large screens
   const customGrid = {
     gutter: 16,
     xs: 1,  // 1 column on extra small screens
@@ -263,7 +262,7 @@ const TodoList = ({
                     </Tooltip>
                   ]}
                 >
-                  <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ marginTop: '5px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     {getStatusBadge(todo.completed)}
                     <Text type="secondary" style={{ fontSize: '12px' }}>
                       {new Date(todo.createdAt).toLocaleDateString()}
@@ -274,18 +273,19 @@ const TodoList = ({
                     {todo.title}
                   </Title>
                   
-                  <Paragraph 
-                    ellipsis={{ rows: 2 }} 
-                    style={{ fontSize: '14px', marginBottom: '12px', flex: 1, color: 'rgba(0,0,0,0.65)' }}
-                  >
-                    {todo.description || 'No description provided'}
-                  </Paragraph>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                    <Paragraph 
+                      ellipsis={{ rows: 2 }} 
+                      style={{ fontSize: '14px', color: 'rgba(0,0,0,0.65)', marginBottom: 0 }}
+                    >
+                      {todo.description && todo.description.length > 20 
+                        ? `${todo.description.slice(0, 20)}...` 
+                        : (todo.description || 'No description provided')}
+                    </Paragraph>
 
-                  {todo.filePath && (
-                    <div style={{ marginBottom: '8px' }}>
-                      {renderAttachment(todo.filePath)}
-                    </div>
-                  )}
+                    {todo.filePath && renderAttachment(todo.filePath)}
+                  </div>
+
                   
                   {renderTags(todo.tags)}
                 </Card>
