@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://todo-l6h3.onrender.com/api';
 
 interface UserData {
   email: string;

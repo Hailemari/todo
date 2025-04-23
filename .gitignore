@@ -13,8 +13,6 @@ logs/
 dist/
 build/
 
-# Uploaded files
-uploads/
 
 # OS-specific files
 .DS_Store

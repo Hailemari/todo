@@ -11,7 +11,7 @@ import { JSX, useState } from 'react';
 const { Text, Paragraph, Title } = Typography;
 
 // Base URL extracted as a constant for easier management
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://todo-l6h3.onrender.com';
 const UPLOADS_PATH = `${BASE_URL}/uploads/`;
 
 const TodoList = ({
