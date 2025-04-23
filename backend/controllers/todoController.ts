@@ -8,13 +8,13 @@ import { Types, ObjectId } from 'mongoose';
 
 
 const getStoredFileName = (file?: Express.Multer.File) => 
-  file ? file.filename : null;
+  file ? file.filename : undefined;
 
 
 // Types
 interface TodoRequest extends Request {
-  user: { id: string };
-  files?: { image?: Express.Multer.File[]; file?: Express.Multer.File[] }; // Handle files
+  user?: { id: string }; // Make user optional
+  files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] }; // Handle files
 }
 
 interface TodoDocument {
@@ -54,6 +54,10 @@ export const getTodos = asyncHandler(async (req: TodoRequest, res: Response): Pr
   const searchQuery: string = req.query.search as string;
   const tagFilter: string = req.query.tag as string;
   
+  if (!req.user) {
+    res.status(401);
+    throw new Error('User not authenticated');
+  }
   let query: Record<string, any> = { user: new Types.ObjectId(req.user.id) };
   
   // Add search functionality
@@ -115,9 +119,9 @@ export const createTodo = asyncHandler(async (req: TodoRequest, res: Response) =
     // Create todo
     const todo = await Todo.create({
       ...validatedData,
-      user: new Types.ObjectId(req.user.id),
-      imagePath: getStoredFileName(req.files?.image?.[0]),
-      filePath: getStoredFileName(req.files?.file?.[0]),
+      user: new Types.ObjectId(req.user?.id || (() => { throw new Error('User not authenticated'); })()),
+      imagePath: Array.isArray(req.files) ? null : getStoredFileName(req.files?.image?.[0]),
+      filePath: Array.isArray(req.files) ? null : getStoredFileName((req.files as { [fieldname: string]: Express.Multer.File[] })?.file?.[0]),
     }) as unknown as TodoDocument;
     
     res.status(201).json(todo);
@@ -142,7 +146,7 @@ export const updateTodo = asyncHandler(async (req: TodoRequest, res: Response) =
   }
   
   // Make sure the logged in user matches the todo user
-  if (todo.user.toString() !== req.user.id) {
+  if (!req.user || todo.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error('User not authorized');
   }
@@ -164,7 +168,7 @@ export const updateTodo = asyncHandler(async (req: TodoRequest, res: Response) =
     // Handle file updates
     let updateData: Partial<TodoDocument> = { ...validatedData };
     
-    if (req.files?.image) {
+    if (!Array.isArray(req.files) && req.files?.image) {
       // Delete old image if exists
       if (todo.imagePath && fs.existsSync(todo.imagePath)) {
         fs.unlinkSync(todo.imagePath);
@@ -172,7 +176,7 @@ export const updateTodo = asyncHandler(async (req: TodoRequest, res: Response) =
       updateData.imagePath = getStoredFileName(req.files?.image?.[0]);
     }
     
-    if (req.files?.file) {
+    if (!Array.isArray(req.files) && req.files?.file) {
       // Delete old file if exists
       if (todo.filePath && fs.existsSync(todo.filePath)) {
         fs.unlinkSync(todo.filePath);
@@ -208,7 +212,7 @@ export const deleteTodo = asyncHandler(async (req: TodoRequest, res: Response) =
   }
   
   // Make sure the logged in user matches the todo user
-  if (todo.user.toString() !== req.user.id) {
+  if (!req.user || todo.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error('User not authorized');
   }
@@ -239,7 +243,7 @@ export const getTodo = asyncHandler(async (req: TodoRequest, res: Response) => {
   }
   
   // Make sure the logged in user matches the todo user
-  if (todo.user.toString() !== req.user.id) {
+  if (!req.user || todo.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error('User not authorized');
   }

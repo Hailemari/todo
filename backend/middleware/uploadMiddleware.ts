@@ -10,13 +10,22 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 // Define the storage engine
+interface StorageEngineOptions {
+  destination: string;
+  filename: (
+    req: Request,
+    file: Express.Multer.File,
+    cb: (error: Error | null, filename: string) => void
+  ) => void;
+}
+
 const storage = multer.diskStorage({
   destination: uploadDir,
-  filename: (req, file, cb) => {
+  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
   }
-});
+} as StorageEngineOptions);
 
 // File filter function to allow only images
 const fileFilter = (
