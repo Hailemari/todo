@@ -10,7 +10,6 @@ import { JSX, useState } from 'react';
 
 const { Text, Paragraph, Title } = Typography;
 
-// Base URL extracted as a constant for easier management
 const BASE_URL = 'https://todo-l6h3.onrender.com';
 const UPLOADS_PATH = `${BASE_URL}/uploads/`;
 
@@ -68,7 +67,6 @@ const TodoList = ({
 
   const renderThumbnail = (imagePath: string | undefined, title: string): JSX.Element => {
     if (!imagePath) {
-      // Return a better placeholder with an icon
       return (
         <div className="thumbnail-placeholder" style={{ 
           height: 200, 
@@ -144,7 +142,6 @@ const TodoList = ({
       return <div className="no-attachment"></div>;
     }
     
-    // Extract filename from path
     const fileName = filePath.split('/').pop() || 'Attachment';
     
     return (
@@ -155,7 +152,6 @@ const TodoList = ({
           onClick={(e: React.MouseEvent<HTMLElement>): void => {
             e.preventDefault();
             
-            // Create a temporary anchor element to force download
             const tempLink = document.createElement('a');
             tempLink.href = `${UPLOADS_PATH}${filePath}`;
             tempLink.setAttribute('download', fileName);
@@ -219,12 +215,12 @@ const TodoList = ({
 
   const customGrid = {
     gutter: 16,
-    xs: 1,  // 1 column on extra small screens
-    sm: 2,  // 2 columns on small screens
-    md: 3,  // 3 columns on medium screens
-    lg: 4,  // 4 columns on large screens
-    xl: 5,  // 5 columns on extra large screens (this is the key change)
-    xxl: 5  // Keep 5 columns on extra-extra large screens
+    xs: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 5,
+    xxl: 5
   };
 
   return (
@@ -263,31 +259,45 @@ const TodoList = ({
                   ]}
                 >
                   <div style={{ marginTop: '5px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    {getStatusBadge(todo.completed)}
-                    <Text type="secondary" style={{ fontSize: '12px' }}>
-                      {new Date(todo.createdAt).toLocaleDateString()}
-                    </Text>
-                  </div>
-                  
-                  <Title level={5} ellipsis={{ rows: 1 }} style={{ marginBottom: '8px' }}>
-                    {todo.title}
-                  </Title>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
-                    <Paragraph 
-                      ellipsis={{ rows: 2 }} 
-                      style={{ fontSize: '14px', color: 'rgba(0,0,0,0.65)', marginBottom: 0 }}
+                      {getStatusBadge(todo.completed)}
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
+                        {new Date(todo.createdAt).toLocaleDateString()}
+                      </Text>
+                    </div>
+
+                    <Title 
+                      level={5} 
+                      style={{ 
+                        marginBottom: '8px', 
+                        overflow: 'hidden', 
+                        whiteSpace: 'nowrap', 
+                        textOverflow: 'ellipsis' 
+                      }}
+                      title={todo.title}
                     >
-                      {todo.description && todo.description.length > 20 
-                        ? `${todo.description.slice(0, 20)}...` 
-                        : (todo.description || 'No description provided')}
-                    </Paragraph>
+                      {todo.title}
+                    </Title>
 
-                    {todo.filePath && renderAttachment(todo.filePath)}
-                  </div>
+                    <div className="card-description" style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+                      <Paragraph 
+                        ellipsis={{ rows: 2 }} 
+                        style={{ marginBottom: 0, textAlign: 'center' }}
+                      >
+                        {todo.description?.length
+                          ? (todo.description.length > 40 ? `${todo.description.slice(0, 40)}...` : todo.description)
+                          : 'No description provided'}
+                      </Paragraph>
+                    </div>
 
-                  
-                  {renderTags(todo.tags)}
+                    <div className="attachment-section">
+                      {todo.filePath ? renderAttachment(todo.filePath) : null}
+                    </div>
+
+                    <div className="tag-section">
+                      {todo.tags?.length ? renderTags(todo.tags) : null}
+                    </div>
+
+
                 </Card>
               </List.Item>
             )}
