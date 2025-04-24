@@ -20,7 +20,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=5000
-      - MONGO_URI=mongodb+srv://hailemariam:woynuaenate@todo-cluster.jamzgna.mongodb.net
+      - MONGO_URI=mongodb+srv://<username>:<password>@todo-cluster.jamzgna.mongodb.net
       - JWT_SECRET=not-an-option
     volumes:
       - ./uploads:/app/uploads
