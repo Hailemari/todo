@@ -1,4 +1,3 @@
-```markdown
 # Todo Application
 
 This is a full-stack Todo application built with React.js for the frontend and Express.js for the backend. The application allows users to securely log in and manage their personal to-do items, with support for media upload, search, tagging, and more.
@@ -250,4 +249,3 @@ Note: For manual user creation, you'll need to hash the password using bcrypt. I
 ## License
 
 This project is open-source and available under the MIT License.
-```
