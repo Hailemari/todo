@@ -1,3 +1,4 @@
+```markdown
 # Todo Application
 
 This is a full-stack Todo application built with React.js for the frontend and Express.js for the backend. The application allows users to securely log in and manage their personal to-do items, with support for media upload, search, tagging, and more.
@@ -87,19 +88,31 @@ Eskalate/
 
 ## Running Instructions
 
-### Backend Setup
+### Option 1: Clone and Run Locally
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-repository-url.git
+cd Eskalate
+```
+
+#### 2. Backend Setup
 
 1. Navigate to the backend directory:
+
 ```bash
 cd backend
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file in the backend directory with the following variables:
+
 ```
 NODE_ENV=development
 PORT=5000
@@ -108,26 +121,83 @@ JWT_SECRET=your_jwt_secret_here
 ```
 
 4. Start the backend server:
+
 ```bash
 npm run dev
 ```
 
-### Frontend Setup
+#### 3. Frontend Setup
 
 1. Navigate to the frontend directory:
+
 ```bash
-cd frontend/todo
+cd frontend
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the frontend development server:
+
 ```bash
 npm run dev
 ```
+
+### Option 2: Run from Docker Hub
+
+You can run both the frontend and backend directly from Docker Hub.
+
+#### 1. Run the Backend Docker Container
+
+First, pull the backend image from Docker Hub:
+
+```bash
+docker pull woynua/eskalate_backend
+```
+
+Then, run the backend container:
+
+```bash
+docker run -d -p 5000:5000 woynua/eskalate_backend
+```
+
+**Note:** If port 5000 is already in use, you can change the port by modifying the command:
+
+```bash
+docker run -d -p 5001:5000 woynua/eskalate_backend
+```
+
+This will map the backend container's port 5000 to port 5001 on your local machine.
+
+#### 2. Run the Frontend Docker Container
+
+Next, pull the frontend image from Docker Hub:
+
+```bash
+docker pull woynua/eskalate_frontend
+```
+
+Then, run the frontend container:
+
+```bash
+docker run -d -p 80:80 woynua/eskalate_frontend
+```
+
+**Note:** If port 80 is already in use, you can change the port by modifying the command:
+
+```bash
+docker run -d -p 8080:80 woynua/eskalate_frontend
+```
+
+This will map the frontend container's port 80 to port 8080 on your local machine.
+
+#### 3. Access the Application
+
+- The frontend will be accessible at [http://localhost:80](http://localhost:80) (or the port you mapped).
+- The backend will be accessible at [http://localhost:5000](http://localhost:5000) (or the port you mapped).
 
 ## Database Setup
 
@@ -180,3 +250,4 @@ Note: For manual user creation, you'll need to hash the password using bcrypt. I
 ## License
 
 This project is open-source and available under the MIT License.
+```
